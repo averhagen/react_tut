@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 class Square extends React.Component {
+
+    _isMounted = false;
     
     constructor(props) {
         super(props);
@@ -14,7 +16,7 @@ class Square extends React.Component {
     click() {
         this.setState({value: 'X'});
     }
-    
+
     render() {
         return (
             <button className="square" onClick={() => this.click()}>
@@ -26,50 +28,67 @@ class Square extends React.Component {
 
 class Board extends React.Component {
 
-    constructor() {
-        super();
-        this.rows = [];
+    constructor(props) {
+        super(props);
+        this.initSquares();
     }
 
-    renderSquare(i) {
-        return <Square value={i} />;
+    initSquares() {
+        this.squares = [];
+        let numberOfSquaresAdded = this.squares.length;
+        for(let width=0; width < this.props.width; width++) {
+            let row = this.createRowOfSquares(numberOfSquaresAdded);
+            this.squares.push(row);
+            numberOfSquaresAdded += row.length;
+        }
     }
 
-    createRow(rowStartingNumber) {
+    createRowOfSquares(rowStartingNumber) {
         let row = [];
         for(let width=0; width < this.props.width; width++) {
-            row.push(this.renderSquare(rowStartingNumber + width))
+            row.push(this.createSquare(rowStartingNumber + row.length))
         }
         return row;
     }
 
-    createRows() {
-        this.rows = [];
-        for(let width=0; width < this.props.width; width++) {
-            this.rows.push(
-                <div className="board-row">
-                    {this.createRow(width * this.props.height)}
+    createSquare(i) {
+        return <Square value={i} key={"square" + i} />;
+    }
+
+    renderRow(rowToRender) {
+        let row = this.squares[rowToRender];
+        let renderedRow = [];
+        for(let i=0; i < row.length; i++) {
+            let square = row[i];
+            renderedRow.push(square);
+        }
+        return renderedRow;
+    }
+    
+    renderRows() {
+        let renderedRows = [];
+        for(let i=0; i < this.props.height; i++) {
+                let key = "row" + i;
+                renderedRows.push(
+                <div className="board-row" key={key}>
+                    {this.renderRow(i)}
                 </div>
             )
-        }   
-        return this.rows;
+        }
+        return renderedRows;
     }
 
     render() {
+        let renderedRows = this.renderRows();
         return (
             <div>
-                {this.createRows()}
+                {renderedRows}
             </div>
         );
     }
 }
 
 class Game extends React.Component {
-    constructor() {
-        super();
-        this.width;
-        this.height;
-    }
 
     get height() {
         return 3;
