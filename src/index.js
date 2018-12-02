@@ -5,7 +5,7 @@ import './index.css';
 class Square extends React.Component {
 
     _isMounted = false;
-    
+
     constructor(props) {
         super(props);
         this.state = {
@@ -13,13 +13,13 @@ class Square extends React.Component {
         }
     }
 
-    click() {
-        this.setState({value: 'X'});
+    notifyObserversOfClick() {
+        this.props.game.notifySquareClick(this);
     }
 
     render() {
         return (
-            <button className="square" onClick={() => this.click()}>
+            <button className="square" onClick={() => this.notifyObserversOfClick()}>
                 {this.state.value}
             </button>
         );
@@ -46,13 +46,15 @@ class Board extends React.Component {
     createRowOfSquares(rowStartingNumber) {
         let row = [];
         for(let width=0; width < this.props.width; width++) {
-            row.push(this.createSquare(rowStartingNumber + row.length))
+            let square = this.createSquare(rowStartingNumber + row.length);
+            console.log(square);
+            row.push(square);
         }
         return row;
     }
 
     createSquare(i) {
-        return <Square value={i} key={"square" + i} />;
+        return <Square game={this.props.game} value={i} key={"square" + i} />;
     }
 
     renderRow(rowToRender) {
@@ -103,7 +105,7 @@ class Game extends React.Component {
         return (
             <div className="game">
                 <div className="game-board">
-                    <Board width={this.width} height={this.height}/>
+                    <Board game={this} width={this.width} height={this.height}/>
                 </div>
                 <div className="game-info">
                     <div>{/* status */}</div>
@@ -111,6 +113,10 @@ class Game extends React.Component {
                 </div>
             </div>
         );
+    }
+
+    notifySquareClick(square) {
+        square.setState({value: 'abc'});
     }
 }
 
