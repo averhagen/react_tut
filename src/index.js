@@ -7,7 +7,7 @@ class Square extends React.Component {
     render() {
         return (
             <button className="square" onClick={() => this.props.handleSquareClick(this)}>
-                {console.log("rendering square: " + this.props.index)}
+                {console.log("rendering square: " + this.props.index + " with value " + this.props.value)}
                 {this.props.value}
             </button>
         );
@@ -17,11 +17,11 @@ class Square extends React.Component {
 class Board extends React.Component {
 
     createSquare(i, displayValue) {
-        return <Square 
-                    index={i} 
-                    handleSquareClick={this.props.handleSquareClick} 
-                    value={displayValue}
-                    key={"square" + i} />;
+        return <Square
+            index={i}
+            handleSquareClick={this.props.handleSquareClick}
+            value={displayValue}
+            key={"square" + i} />;
     }
 
     renderRow(rowIndex) {
@@ -30,7 +30,7 @@ class Board extends React.Component {
         for (let i = 0; i < this.props.width; i++) {
             let squareIndex = rowIndex * this.props.width + i;
             let displayData = this.props.gridData[squareIndex];
-            renderedRow.push(this.createSquare(squareIndex, displayData))
+            renderedRow.push(this.createSquare(squareIndex, displayData));
         }
         return renderedRow;
     }
@@ -78,11 +78,22 @@ class Game extends React.Component {
     }
 
     handleSquareClick(clickedSquare) {
-        let newGridData = [...this.state.gridData];
-        newGridData[clickedSquare.props.index] = this.getCurrentGameMarker();
-        let newTurnNumber = this.state.turnNumber + 1;
-        this.setState({ gridData: newGridData, turnNumber: newTurnNumber });
-        console.log(this.state);
+        if (!this.isSquareClicked(clickedSquare)) {
+            let newGridData = [...this.state.gridData];
+            newGridData[clickedSquare.props.index] = this.getCurrentGameMarker();
+            let newTurnNumber = this.state.turnNumber + 1;
+            this.setState(
+                {
+                    gridData: newGridData,
+                    turnNumber: newTurnNumber
+                }
+            );
+            console.log(this.state);
+        }
+    }
+
+    isSquareClicked(square) {
+        return square.props.value !== this.props.startingValue;
     }
 
     getCurrentGameMarker() {
