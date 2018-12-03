@@ -23,23 +23,23 @@ class Board extends React.Component {
     renderRow(rowIndex) {
         console.log("rendering row " + rowIndex);
         let renderedRow = [];
-        for(let i=0; i < this.props.width; i++) {
+        for (let i = 0; i < this.props.width; i++) {
             let squareIndex = rowIndex * this.props.width + i;
             let displayData = this.props.gridData[squareIndex];
             renderedRow.push(this.createSquare(squareIndex, displayData))
         }
         return renderedRow;
     }
-    
+
     renderRows() {
         let renderedRows = [];
-        for(let i=0; i < this.props.height; i++) {
-                let key = "row" + i;
-                renderedRows.push(
-                    <div className="board-row" key={key}>
-                        {this.renderRow(i)}
-                    </div>
-                );
+        for (let i = 0; i < this.props.height; i++) {
+            let key = "row" + i;
+            renderedRows.push(
+                <div className="board-row" key={key}>
+                    {this.renderRow(i)}
+                </div>
+            );
         }
         return renderedRows;
     }
@@ -71,27 +71,27 @@ class Game extends React.Component {
 
     get blankGrid() {
         let blankGrid = [];
-        for(let i = 0; i < this.props.width * this.props.height; i++) {
+        for (let i = 0; i < this.props.width * this.props.height; i++) {
             blankGrid.push(i);
         }
         return blankGrid;
     }
-    
+
     handleSquareClick(clickedSquare) {
         let newGridData = [...this.state.gridData];
         let currentMarker = this.props.playerMarkers[this.state.turnNumber % this.props.playerMarkers.length];
         newGridData[clickedSquare.props.value] = currentMarker;
         let newTurnNumber = this.state.turnNumber + 1;
-        this.setState({gridData: newGridData, turnNumber: newTurnNumber});
+        this.setState({ gridData: newGridData, turnNumber: newTurnNumber });
         console.log(this.state);
     }
-    
+
     render() {
         return (
             <div className="game">
                 {console.log("rendering game")}
                 <div className="game-board">
-                    <Board gridData={this.state.gridData} handleSquareClick={this.handleSquareClick} width={this.props.width} height={this.props.height}/>
+                    <Board gridData={this.state.gridData} handleSquareClick={this.handleSquareClick} width={this.props.width} height={this.props.height} />
                 </div>
                 <div className="game-info">
                     <div>{/* status */}</div>
@@ -105,6 +105,6 @@ class Game extends React.Component {
 // ========================================
 
 ReactDOM.render(
-    <Game playerMarkers={["x","o"]} width={3} height={3} />,
+    <Game playerMarkers={["x", "o"]} width={3} height={3} />,
     document.getElementById('root')
 );
