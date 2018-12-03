@@ -18,28 +18,6 @@ class Board extends React.Component {
 
     constructor(props) {
         super(props);
-        this.initSquares();
-    }
-
-    initSquares() {
-        this.squares = [];
-        let numberOfSquaresAdded = this.squares.length;
-        for(let width=0; width < this.props.width; width++) {
-            let row = this.createRowOfSquares(numberOfSquaresAdded);
-            this.squares.push(row);
-            numberOfSquaresAdded += row.length;
-        }
-    }
-
-    createRowOfSquares(rowStartingNumber) {
-        let row = [];
-        for(let width=0; width < this.props.width; width++) {
-            let squareIndex = rowStartingNumber + row.length;
-            let squareValue = this.props.displayData;
-            let square = this.createSquare(squareIndex, squareValue);
-            row.push(square);
-        }
-        return row;
     }
 
     createSquare(i, displayValue) {
@@ -48,11 +26,11 @@ class Board extends React.Component {
 
     renderRow(rowIndex) {
         console.log("rendering row " + rowIndex);
-        let row = this.squares[rowIndex];
         let renderedRow = [];
-        for(let i=0; i < row.length; i++) {
-            let square = row[i];
-            renderedRow.push(square);
+        for(let i=0; i < 3; i++) {
+            let squareIndex = rowIndex * 3 + i;
+            let displayData = this.props.gridData[squareIndex];
+            renderedRow.push(this.createSquare(squareIndex, displayData))
         }
         return renderedRow;
     }
@@ -62,10 +40,10 @@ class Board extends React.Component {
         for(let i=0; i < this.props.height; i++) {
                 let key = "row" + i;
                 renderedRows.push(
-                <div className="board-row" key={key}>
-                    {this.renderRow(i)}
-                </div>
-            );
+                    <div className="board-row" key={key}>
+                        {this.renderRow(i)}
+                    </div>
+                );
         }
         return renderedRows;
     }
@@ -113,10 +91,9 @@ class Game extends React.Component {
     
     handleSquareClick(clickedSquare) {
         this.setState({displayData: "b"});
-        // let newGridData = [...this.state.gridData];
-        // newGridData[clickedSquare.props.value] = "hello";
-        // this.setState({gridData: newGridData});
-        // console.log(this.state.gridData);
+        let newGridData = [...this.state.gridData];
+        newGridData[clickedSquare.props.value] = "hello";
+        this.setState({gridData: newGridData});
     }
     
     render() {
@@ -124,7 +101,7 @@ class Game extends React.Component {
             <div className="game">
                 {console.log("rendering game")}
                 <div className="game-board">
-                    <Board displayData={this.state.displayData} handleSquareClick={this.handleSquareClick} width={this.width} height={this.height}/>
+                    <Board gridData={this.state.gridData} handleSquareClick={this.handleSquareClick} width={this.width} height={this.height}/>
                 </div>
                 <div className="game-info">
                     <div>{/* status */}</div>
