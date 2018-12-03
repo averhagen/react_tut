@@ -65,25 +65,25 @@ class Game extends React.Component {
         this.handleSquareClick = this.handleSquareClick.bind(this);
     }
 
-    get blankValue() {
-        return null;
-    }
-
     get blankGrid() {
         let blankGrid = [];
         for (let i = 0; i < this.props.width * this.props.height; i++) {
-            blankGrid.push(i);
+            blankGrid.push(this.props.startingValue);
         }
         return blankGrid;
     }
 
     handleSquareClick(clickedSquare) {
         let newGridData = [...this.state.gridData];
-        let currentMarker = this.props.playerMarkers[this.state.turnNumber % this.props.playerMarkers.length];
-        newGridData[clickedSquare.props.value] = currentMarker;
+        newGridData[clickedSquare.props.index] = this.getCurrentGameMarker();
         let newTurnNumber = this.state.turnNumber + 1;
         this.setState({ gridData: newGridData, turnNumber: newTurnNumber });
         console.log(this.state);
+    }
+
+    getCurrentGameMarker() {
+        let playersTurn = this.state.turnNumber % this.props.playerMarkers.length;
+        return this.props.playerMarkers[playersTurn];
     }
 
     render() {
@@ -91,7 +91,11 @@ class Game extends React.Component {
             <div className="game">
                 {console.log("rendering game")}
                 <div className="game-board">
-                    <Board gridData={this.state.gridData} handleSquareClick={this.handleSquareClick} width={this.props.width} height={this.props.height} />
+                    <Board
+                        gridData={this.state.gridData}
+                        handleSquareClick={this.handleSquareClick}
+                        width={this.props.width}
+                        height={this.props.height} />
                 </div>
                 <div className="game-info">
                     <div>{/* status */}</div>
@@ -105,6 +109,6 @@ class Game extends React.Component {
 // ========================================
 
 ReactDOM.render(
-    <Game playerMarkers={["x", "o"]} width={3} height={3} />,
+    <Game playerMarkers={["x", "o"]} width={3} height={3} startingValue={""} />,
     document.getElementById('root')
 );
