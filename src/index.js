@@ -17,7 +17,11 @@ class Square extends React.Component {
 class Board extends React.Component {
 
     createSquare(i, displayValue) {
-        return <Square index={i} handleSquareClick={this.props.handleSquareClick} value={displayValue} key={"square" + i} />;
+        return <Square 
+                    index={i} 
+                    handleSquareClick={this.props.handleSquareClick} 
+                    value={displayValue}
+                    key={"square" + i} />;
     }
 
     renderRow(rowIndex) {
