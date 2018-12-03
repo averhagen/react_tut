@@ -4,23 +4,11 @@ import './index.css';
 
 class Square extends React.Component {
 
-    _isMounted = false;
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            value: null,
-        }
-    }
-
-    notifyObserversOfClick() {
-        this.props.game.notifySquareClick(this);
-    }
-
     render() {
         return (
-            <button className="square" onClick={() => this.notifyObserversOfClick()}>
-                {this.state.value}
+            <button className="square" onClick={() => this.props.handleSquareClick(this)}>
+                {console.log("rendering square: " + this.props.index)}
+                {this.props.value}
             </button>
         );
     }
@@ -46,19 +34,21 @@ class Board extends React.Component {
     createRowOfSquares(rowStartingNumber) {
         let row = [];
         for(let width=0; width < this.props.width; width++) {
-            let square = this.createSquare(rowStartingNumber + row.length);
-            console.log(square);
+            let squareIndex = rowStartingNumber + row.length;
+            let squareValue = this.props.displayData;
+            let square = this.createSquare(squareIndex, squareValue);
             row.push(square);
         }
         return row;
     }
 
-    createSquare(i) {
-        return <Square game={this.props.game} value={i} key={"square" + i} />;
+    createSquare(i, displayValue) {
+        return <Square index={i} handleSquareClick={this.props.handleSquareClick} value={displayValue} key={"square" + i} />;
     }
 
-    renderRow(rowToRender) {
-        let row = this.squares[rowToRender];
+    renderRow(rowIndex) {
+        console.log("rendering row " + rowIndex);
+        let row = this.squares[rowIndex];
         let renderedRow = [];
         for(let i=0; i < row.length; i++) {
             let square = row[i];
@@ -75,22 +65,35 @@ class Board extends React.Component {
                 <div className="board-row" key={key}>
                     {this.renderRow(i)}
                 </div>
-            )
+            );
         }
         return renderedRows;
     }
 
     render() {
-        let renderedRows = this.renderRows();
         return (
             <div>
-                {renderedRows}
+                {console.log("rendering rows")}
+                {this.renderRows()}
             </div>
         );
     }
 }
 
 class Game extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            gridData: this.blankGrid,
+            displayData: "a"
+        }
+        this.handleSquareClick = this.handleSquareClick.bind(this);
+    }
+
+    get blankValue() {
+        return null;
+    }
 
     get height() {
         return 3;
@@ -100,12 +103,28 @@ class Game extends React.Component {
         return 3;
     }
 
+    get blankGrid() {
+        let blankGrid = [];
+        for(let i = 0; i < this.width * this.height; i++) {
+            blankGrid.push(i);
+        }
+        return blankGrid;
+    }
+    
+    handleSquareClick(clickedSquare) {
+        this.setState({displayData: "b"});
+        // let newGridData = [...this.state.gridData];
+        // newGridData[clickedSquare.props.value] = "hello";
+        // this.setState({gridData: newGridData});
+        // console.log(this.state.gridData);
+    }
     
     render() {
         return (
             <div className="game">
+                {console.log("rendering game")}
                 <div className="game-board">
-                    <Board game={this} width={this.width} height={this.height}/>
+                    <Board displayData={this.state.displayData} handleSquareClick={this.handleSquareClick} width={this.width} height={this.height}/>
                 </div>
                 <div className="game-info">
                     <div>{/* status */}</div>
@@ -113,10 +132,6 @@ class Game extends React.Component {
                 </div>
             </div>
         );
-    }
-
-    notifySquareClick(square) {
-        square.setState({value: 'abc'});
     }
 }
 
