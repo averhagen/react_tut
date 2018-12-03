@@ -23,8 +23,8 @@ class Board extends React.Component {
     renderRow(rowIndex) {
         console.log("rendering row " + rowIndex);
         let renderedRow = [];
-        for(let i=0; i < 3; i++) {
-            let squareIndex = rowIndex * 3 + i;
+        for(let i=0; i < this.props.width; i++) {
+            let squareIndex = rowIndex * this.props.width + i;
             let displayData = this.props.gridData[squareIndex];
             renderedRow.push(this.createSquare(squareIndex, displayData))
         }
