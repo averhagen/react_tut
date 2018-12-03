@@ -69,17 +69,9 @@ class Game extends React.Component {
         return null;
     }
 
-    get height() {
-        return 3;
-    }
-    
-    get width() {
-        return 3;
-    }
-
     get blankGrid() {
         let blankGrid = [];
-        for(let i = 0; i < this.width * this.height; i++) {
+        for(let i = 0; i < this.props.width * this.props.height; i++) {
             blankGrid.push(i);
         }
         return blankGrid;
@@ -99,7 +91,7 @@ class Game extends React.Component {
             <div className="game">
                 {console.log("rendering game")}
                 <div className="game-board">
-                    <Board gridData={this.state.gridData} handleSquareClick={this.handleSquareClick} width={this.width} height={this.height}/>
+                    <Board gridData={this.state.gridData} handleSquareClick={this.handleSquareClick} width={this.props.width} height={this.props.height}/>
                 </div>
                 <div className="game-info">
                     <div>{/* status */}</div>
@@ -113,6 +105,6 @@ class Game extends React.Component {
 // ========================================
 
 ReactDOM.render(
-    <Game playerMarkers={["x","o"]} />,
+    <Game playerMarkers={["x","o"]} width={3} height={3} />,
     document.getElementById('root')
 );
