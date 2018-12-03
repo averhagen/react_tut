@@ -16,10 +16,6 @@ class Square extends React.Component {
 
 class Board extends React.Component {
 
-    constructor(props) {
-        super(props);
-    }
-
     createSquare(i, displayValue) {
         return <Square index={i} handleSquareClick={this.props.handleSquareClick} value={displayValue} key={"square" + i} />;
     }
@@ -63,8 +59,8 @@ class Game extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            turnNumber: 0,
             gridData: this.blankGrid,
-            displayData: "a"
         }
         this.handleSquareClick = this.handleSquareClick.bind(this);
     }
@@ -90,10 +86,12 @@ class Game extends React.Component {
     }
     
     handleSquareClick(clickedSquare) {
-        this.setState({displayData: "b"});
         let newGridData = [...this.state.gridData];
-        newGridData[clickedSquare.props.value] = "hello";
-        this.setState({gridData: newGridData});
+        let currentMarker = this.props.playerMarkers[this.state.turnNumber % this.props.playerMarkers.length];
+        newGridData[clickedSquare.props.value] = currentMarker;
+        let newTurnNumber = this.state.turnNumber + 1;
+        this.setState({gridData: newGridData, turnNumber: newTurnNumber});
+        console.log(this.state);
     }
     
     render() {
@@ -115,6 +113,6 @@ class Game extends React.Component {
 // ========================================
 
 ReactDOM.render(
-    <Game />,
+    <Game playerMarkers={["x","o"]} />,
     document.getElementById('root')
 );
