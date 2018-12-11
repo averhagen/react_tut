@@ -79,16 +79,9 @@ class Game extends React.Component {
 
     handleSquareClick(clickedSquare) {
         if (!this.isSquareClicked(clickedSquare)) {
-            let newGridData = [...this.state.gridData];
-            newGridData[clickedSquare.props.index] = this.getCurrentGameMarker();
-            let newTurnNumber = this.state.turnNumber + 1;
-            this.setState(
-                {
-                    gridData: newGridData,
-                    turnNumber: newTurnNumber
-                }
-            );
-            console.log(this.state);
+           this.markSquare(clickedSquare);
+           this.incrementTurn();
+           console.log(this.state);
         }
     }
 
@@ -96,9 +89,27 @@ class Game extends React.Component {
         return square.props.value !== this.props.startingValue;
     }
 
+    markSquare(square) {
+        let newGridData = [...this.state.gridData];
+        newGridData[square.props.index] = this.getCurrentGameMarker();
+        this.setState(
+            {
+                gridData: newGridData,
+            }
+        );
+    }
+
     getCurrentGameMarker() {
         let playersTurn = this.state.turnNumber % this.props.playerMarkers.length;
         return this.props.playerMarkers[playersTurn];
+    }
+
+    incrementTurn() {
+        this.setState(
+            {
+                turnNumber: this.state.turnNumber + 1,
+            }
+        );
     }
 
     render() {
