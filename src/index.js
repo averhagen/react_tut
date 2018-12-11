@@ -63,7 +63,8 @@ class Game extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            turnNumber: 0,
+            turnNumber: this.props.startingTurnNumber,
+            currentGameMarker: this.props.playerMarkers[this.props.startingTurnNumber],
             gridData: this.blankGrid,
         }
         this.handleSquareClick = this.handleSquareClick.bind(this);
@@ -91,7 +92,7 @@ class Game extends React.Component {
 
     markSquare(square) {
         let newGridData = [...this.state.gridData];
-        newGridData[square.props.index] = this.getCurrentGameMarker();
+        newGridData[square.props.index] = this.state.currentGameMarker;
         this.setState(
             {
                 gridData: newGridData,
@@ -99,15 +100,21 @@ class Game extends React.Component {
         );
     }
 
-    getCurrentGameMarker() {
-        let playersTurn = this.state.turnNumber % this.props.playerMarkers.length;
-        return this.props.playerMarkers[playersTurn];
-    }
-
     incrementTurn() {
         this.setState(
             {
                 turnNumber: this.state.turnNumber + 1,
+            },
+            () => this.updateGameMarker()
+        );
+    }
+
+    updateGameMarker() {
+        let currentPlayersTurn = this.state.turnNumber % this.props.playerMarkers.length;
+        let updatedGameMarker = this.props.playerMarkers[currentPlayersTurn];
+        this.setState(
+            {
+                currentGameMarker: updatedGameMarker,
             }
         );
     }
@@ -124,7 +131,7 @@ class Game extends React.Component {
                         height={this.props.height} />
                 </div>
                 <div className="game-info">
-                    <div>{/* status */}</div>
+                    <div>Current Turn: {this.state.currentGameMarker}</div>
                     <ol>{/* TODO */}</ol>
                 </div>
             </div>
@@ -135,6 +142,6 @@ class Game extends React.Component {
 // ========================================
 
 ReactDOM.render(
-    <Game playerMarkers={["x", "o"]} width={3} height={3} startingValue={""} />,
+    <Game playerMarkers={["x", "o"]} width={3} height={3} startingValue={""} startingTurnNumber={0} />,
     document.getElementById('root')
 );
