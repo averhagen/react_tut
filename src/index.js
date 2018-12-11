@@ -71,11 +71,7 @@ class Game extends React.Component {
     }
 
     get blankGrid() {
-        let blankGrid = [];
-        for (let i = 0; i < this.props.width * this.props.height; i++) {
-            blankGrid.push(this.props.startingValue);
-        }
-        return blankGrid;
+        return Array(this.props.width * this.props.height).fill(this.props.startingValue);
     }
 
     handleSquareClick(clickedSquare) {
